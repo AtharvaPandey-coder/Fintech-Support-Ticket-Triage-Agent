@@ -2,8 +2,6 @@
 
 An agentic system that reads a fintech customer complaint, classifies it, retrieves the relevant company policy, drafts a grounded reply, checks that reply for hallucination, and decides whether it's safe to auto-resolve or should be escalated to a human — with a clear, written reason either way.
 
-Built as a project submission for the Razorpay AI Buildathon (2026).
-
 ## Problem
 
 Fintech support teams handle thousands of complaints daily — failed payments, KYC issues, debt collection disputes, credit reporting errors. Manually triaging every ticket is slow and inconsistent, but blindly automating all of it is risky: some categories (chargebacks, debt collection, fraud) legally require human review. This project automates what's safe to automate, and is explicit about what isn't.
