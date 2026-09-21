@@ -36,7 +36,3 @@ def retrieve_policy(query,k=1):
 
 
 
-
-
-
-

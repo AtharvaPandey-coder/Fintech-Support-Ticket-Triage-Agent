@@ -57,7 +57,7 @@ def triage_ticket(ticket_text,category,confidence,high_risk_categories):
         action="ESCALATE"
         reason=f"Classifier confidence too low ({confidence:.2f}) for auto-resolution"
     else:
-        action="ESCALATE"
+        action="AUTO-RESOLVE"
         reason='High confidence,low risk category and reply passed self-critique'
     return {
         "policy_matched":policy_text,
@@ -66,8 +66,6 @@ def triage_ticket(ticket_text,category,confidence,high_risk_categories):
         "action":action,
         "reason":reason
     }
-
-    
 
 
 
