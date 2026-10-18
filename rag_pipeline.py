@@ -31,8 +31,3 @@ def retrieve_policy(query,k=1):
 #        print(f"Score:{r['score']:.3f}|{r['title']}")
 
 
-
-
-
-
-

@@ -1,9 +1,26 @@
 import os
-from groq import Groq
+from langchain_groq import ChatGroq
 from rag_pipeline import retrieve_policy
 from dotenv import load_dotenv
+from groq import Groq
 load_dotenv()
 client=Groq(api_key=os.environ.get('GROQ_API_KEY'))
+
+
+draft_llm=ChatGroq(
+    model='openai/gpt-oss-20b',
+    api_key=os.getenv('GROQ_API_KEY'),
+    temperature=0.3
+)
+
+critique_llm=ChatGroq(
+    model='openai/gpt-oss-20b',
+    api_key=os.getenv('GROQ_API_KEY'),
+    temperature=0.3
+)
+
+
+
 def draft_reply(ticket_text,category,policy_text):
     prompt=f""" You are a fintech support agent corresponding to the customer complaint 
     Ticket  :"{ticket_text[:500]}"
@@ -18,6 +35,7 @@ def draft_reply(ticket_text,category,policy_text):
         temperature=0.3
     )
     return response.choices[0].message.content.strip()
+
 
 def self_critique(draft_reply_text,policy_text):
     prompt=f"""Policy:"{policy_text}"
