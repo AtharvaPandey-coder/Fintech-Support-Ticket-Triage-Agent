@@ -3,9 +3,13 @@ from langchain_groq import ChatGroq
 from rag_pipeline import retrieve_policy
 from dotenv import load_dotenv
 from groq import Groq
+from langchain_core.output_parsers import StrOutputParser
+from langchain_core.prompts import ChatPromptTemplate
 load_dotenv()
+
 client=Groq(api_key=os.environ.get('GROQ_API_KEY'))
 
+parser=StrOutputParser()
 
 draft_llm=ChatGroq(
     model='openai/gpt-oss-20b',
@@ -19,37 +23,44 @@ critique_llm=ChatGroq(
     temperature=0.3
 )
 
-
-
-def draft_reply(ticket_text,category,policy_text):
-    prompt=f""" You are a fintech support agent corresponding to the customer complaint 
-    Ticket  :"{ticket_text[:500]}"
+draft_prompt=ChatPromptTemplate.from_template("""
+You are a fintech support agent corresponding to the customer complaint 
+    Ticket  :"{ticket_text}"
     Category :"{category}"
     Policy  :"{policy_text}"
     Write a short professional reply grounded only in the policy above do not invent rules or timelines not mentioned in the policy
     Keep it under 100 words
-    """ 
-    response=client.chat.completions.create(
-        model='openai/gpt-oss-20b',
-        messages=[{'role':'user','content':prompt}],
-        temperature=0.3
-    )
-    return response.choices[0].message.content.strip()
+""")
 
-
-def self_critique(draft_reply_text,policy_text):
-    prompt=f"""Policy:"{policy_text}"
+critique_prompt=ChatPromptTemplate.from_template("""
+Policy:"{policy_text}"
 Draft Reply:"{draft_reply_text}"
 Does the draft reply contradict misintrepet or invent details not present in the policy above ?
 Answer in the excat format:
 VERDICT: YES or NO
-Reason: <one line explaining why>"""
-    response=client.chat.completions.create(
-        model='openai/gpt-oss-120b',
-        messages=[{'role':'user','content':prompt}],
-        temperature=0.2
-    )
-    return response.choices[0].message.content.strip()
+Reason: <one line explaining why>
+""")
+
+draft_chain= draft_prompt | draft_llm | parser
+critique_chain= critique_prompt | critique_llm | parser
+
+
+def draft_reply(ticket_text,category,policy_text):
+    return draft_chain.invoke({
+        'ticket_text':ticket_text[:500],
+        'category':category,
+        'policy_text':policy_text
+    }).strip()
+
+
+
+def self_critique(draft_reply_text,policy_text):
+    return critique_chain.invoke({
+        'draft_reply_text':draft_reply_text,
+        'policy_text':policy_text
+    }).strip()
+
+
 
 
 def triage_ticket(ticket_text,category,confidence,high_risk_categories):
