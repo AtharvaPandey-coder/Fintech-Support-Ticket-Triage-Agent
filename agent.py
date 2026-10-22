@@ -98,12 +98,3 @@ def triage_ticket(ticket_text,category,confidence,high_risk_categories):
 
 
 
-
-
-
-
-
-
-
-
-
