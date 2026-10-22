@@ -1,3 +1,8 @@
+
+## 🚀 Live Demo
+
+👉 **[Try the FinTech Support Ticket Triage Agent](https://fintech-support-ticket-triage-agent.streamlit.app/)**
+
 # Fintech Support Ticket Triage Agent
 
 An agentic system that reads a fintech customer complaint, classifies it, retrieves the relevant company policy, drafts a grounded reply, checks that reply for hallucination, and decides whether it's safe to auto-resolve or should be escalated to a human — with a clear, written reason either way.
