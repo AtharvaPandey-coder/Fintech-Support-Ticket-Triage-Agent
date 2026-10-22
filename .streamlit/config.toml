@@ -10,5 +10,9 @@ font = "monospace"
 backgroundColor = "#09090B"
 secondaryBackgroundColor = "#1C1C1F"
 
+[server]
+headless = true
 
+[browser]
+gatherUsageStats = false
 
